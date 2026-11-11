@@ -14,6 +14,10 @@ const insertParticipant = db.prepare(`
 
 // Save a match and its participants to the database
 export const saveMatch = db.transaction((match: any) => {
+    if (matchExists(match.metadata.matchId)) {
+        console.log(`Match ${match.metadata.matchId} already exists in the database.`);
+        return;
+    }
     const match_id = match.metadata.matchId;
     
     insertMatch.run({
@@ -42,8 +46,8 @@ export const saveMatch = db.transaction((match: any) => {
             damage: participant.totalDamageDealtToChampions,
             vision_score: participant.visionScore
         });
-        console.log(`succesfully saved participant for match ${match_id}`);
     });
+    console.log(`Successfully saved match ${match_id}`);
 });
 
 // Check if a match exists in the database
