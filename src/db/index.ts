@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS matches (
 CREATE TABLE IF NOT EXISTS match_participants (
   match_id TEXT NOT NULL REFERENCES matches(match_id),
   puuid TEXT NOT NULL,
-  champion TEXT NOT NULL,
+  champion_id INTEGER NOT NULL,
+  champion_name TEXT NOT NULL,
   position TEXT,
   team_id INTEGER NOT NULL,
   win INTEGER NOT NULL,
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS match_participants (
 );
 
 CREATE INDEX IF NOT EXISTS idx_participants_puuid ON match_participants(puuid);
-CREATE INDEX IF NOT EXISTS idx_participants_champion ON match_participants(champion);
+CREATE INDEX IF NOT EXISTS idx_participants_champion ON match_participants(champion_id);
 CREATE INDEX IF NOT EXISTS idx_matches_start ON matches(game_start);
 `);
 
