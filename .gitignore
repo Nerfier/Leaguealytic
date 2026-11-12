@@ -12,3 +12,4 @@ data/stats.db
 
 web/node_modules/
 web/dist
+data/stats.db

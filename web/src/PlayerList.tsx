@@ -1,7 +1,12 @@
-import { useState, useEffect} from "react";
+import { useEffect, useState } from "react";
 import type { Player } from "./types.ts";
 
-export default function PlayerList() {
+interface Props {
+  selectedPuuid: string | null;
+  onSelect: (puuid: string) => void;
+}
+
+export default function PlayerList({ selectedPuuid, onSelect }: Props) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +29,12 @@ export default function PlayerList() {
     <ul>
       {players.map((p) => (
         <li key={p.puuid}>
-          {p.game_name}#{p.tag_line}
+          <button
+            onClick={() => onSelect(p.puuid)}
+            disabled={p.puuid === selectedPuuid}
+          >
+            {p.game_name}#{p.tag_line}
+          </button>
         </li>
       ))}
     </ul>
