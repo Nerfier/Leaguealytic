@@ -5,11 +5,10 @@
 node_modules/
 
 
-
+*.db
 data/*
 data/stats.db
-
+data/
 
 web/node_modules/
 web/dist
-data/stats.db
