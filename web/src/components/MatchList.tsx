@@ -20,16 +20,16 @@ const getQueueName = (id: number): string => {
 
 export default function MatchList({ puuid }: { puuid: string }) {
     const [page, setPage] = useState(0);
-    const { data, loading, error } = useFetch<MatchRow[]>(
+    const { data, loading, showLoading, error } = useFetch<MatchRow[]>(
         `/api/players/${puuid}/matches?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`
     );
 
-    if (loading) return <p>Loading...</p>;
+    if (!data && loading) return showLoading ? <p>Loading...</p> : null;
     if (error) return <p>Error: {error}</p>;
     if (!data || data.length === 0) return <p>No games yet.</p>;
 
     return (
-        <div>
+        <div style={{ opacity: showLoading ? 0.5 : 1}}>
             <table>
                 <thead>
                     <tr>

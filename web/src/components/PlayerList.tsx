@@ -8,26 +8,28 @@ interface Props {
 }
 
 export default function PlayerList({ selectedPuuid, onSelect }: Props) {
-  const {data, loading, error} = useFetch<Player[]>(
-    `/api/players` 
+  const { data, loading, showLoading, error } = useFetch<Player[]>(
+    `/api/players`
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (!data && loading) return showLoading ? <p>Loading...</p> : null;
   if (error) return <p>Error: {error}</p>;
   if (!data || data.length === 0) return <p>No players in the database.</p>
 
   return (
-    <ul>
-      {data.map((p) => (
-        <li key={p.puuid}>
-          <button
-            onClick={() => onSelect(p.puuid)}
-            disabled={p.puuid === selectedPuuid}
-          >
-            {p.game_name}#{p.tag_line}
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div style={{ opacity: showLoading ? 0.5 : 1 }}>
+      <ul>
+        {data.map((p) => (
+          <li key={p.puuid}>
+            <button
+              onClick={() => onSelect(p.puuid)}
+              disabled={p.puuid === selectedPuuid}
+            >
+              {p.game_name}#{p.tag_line}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
