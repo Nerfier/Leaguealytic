@@ -1,7 +1,8 @@
 import { useState } from "react";
-import PlayerList from "./PlayerList.tsx";
-import Summary from "./Summary.tsx";
-import ChampionTable from "./ChampionTable.tsx";
+import PlayerList from "./components/PlayerList.tsx";
+import Summary from "./components/Summary.tsx";
+import ChampionTable from "./components/ChampionTable.tsx";
+import MatchList from "./components/MatchList.tsx";
 
 export default function App() {
     const [selectedPuuid, setSelectedPuuid] = useState<string | null>(null);
@@ -12,6 +13,7 @@ export default function App() {
             <PlayerList selectedPuuid={selectedPuuid} onSelect={setSelectedPuuid} />
             {selectedPuuid && <Summary puuid={selectedPuuid} />}
             {selectedPuuid && <ChampionTable puuid={selectedPuuid} />}
+            {selectedPuuid && <MatchList puuid={selectedPuuid} />}
         </div>
     );
 }

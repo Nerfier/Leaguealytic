@@ -1,5 +1,5 @@
-import useFetch from "./useFetch.ts";
-import type { Champion } from "./types.ts";
+import useFetch from "../hooks/useFetch.ts";
+import type { Champion } from "../types.ts";
 
 export default function ChampionTable({ puuid }: { puuid: string }) {
     const { data, error, loading} = useFetch<Champion[]>(

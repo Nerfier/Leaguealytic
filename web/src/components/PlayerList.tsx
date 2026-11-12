@@ -1,6 +1,6 @@
 
-import useFetch from "./useFetch.ts";
-import type { Player } from "./types.ts";
+import useFetch from "../hooks/useFetch.ts";
+import type { Player } from "../types.ts";
 
 interface Props {
   selectedPuuid: string | null;

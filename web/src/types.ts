@@ -17,3 +17,20 @@ export interface Champion {
     win_rate: number | null;
     kda: number | null;
 }
+
+export interface MatchRow {
+  match_id: string;
+  game_start: number;
+  duration: number;
+  queue_id: number;
+  champion_id: string;
+  champion_name: string
+  position: string | null;
+  win: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  cs: number;
+  damage: number;
+  vision_score: number;
+}

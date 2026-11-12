@@ -1,5 +1,5 @@
-import useFetch from "./useFetch.ts";
-import type { Summary as SummaryData } from "./types.tsx";
+import useFetch from "../hooks/useFetch.ts";
+import type { Summary as SummaryData } from "../types.ts";
 
 export default function Summary({ puuid }: { puuid: string }) {
     const { data, loading, error} = useFetch<SummaryData>(
