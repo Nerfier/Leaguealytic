@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+
+import useFetch from "./useFetch.ts";
 import type { Player } from "./types.ts";
 
 interface Props {
@@ -7,27 +8,17 @@ interface Props {
 }
 
 export default function PlayerList({ selectedPuuid, onSelect }: Props) {
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/players")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-        return res.json() as Promise<Player[]>;
-      })
-      .then(setPlayers)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
+  const {data, loading, error} = useFetch<Player[]>(
+    `/api/players` 
+  );
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (!data || data.length === 0) return <p>No players in the database.</p>
 
   return (
     <ul>
-      {players.map((p) => (
+      {data.map((p) => (
         <li key={p.puuid}>
           <button
             onClick={() => onSelect(p.puuid)}

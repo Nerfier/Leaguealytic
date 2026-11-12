@@ -10,7 +10,7 @@ const selectSummary = db.prepare(`
 `);
 
 const selectChampions = db.prepare(`
-  SELECT champion_name,
+  SELECT champion_name AS champion,
          COUNT(*) AS games,
          ROUND(100.0 * SUM(win) / COUNT(*), 1) AS win_rate,
          ROUND(1.0 * (SUM(kills) + SUM(assists)) / MAX(SUM(deaths), 1), 2) AS kda

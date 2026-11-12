@@ -10,3 +10,10 @@ export interface Summary {
     win_rate: number | null;
     kda: number | null;
 }
+
+export interface Champion {
+    champion: string;
+    games: number;
+    win_rate: number | null;
+    kda: number | null;
+}
