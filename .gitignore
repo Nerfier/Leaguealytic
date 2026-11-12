@@ -1,5 +1,14 @@
+.vscode
+
+
 .env
 node_modules/
-.vscode
+
+
+
 data/*
 data/stats.db
+
+
+web/node_modules/
+web/dist

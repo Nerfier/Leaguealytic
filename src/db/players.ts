@@ -17,9 +17,9 @@ const updatePlayer = db.prepare(`
     UPDATE players SET game_name = @game_name, tag_line = @tag_line WHERE puuid = @puuid
 `);
 
-const selectAllPlayers = db.prepare(
-    `SELECT puuid, game_name, tag_line FROM players`
-);
+const selectAllPlayers = db.prepare(`
+    SELECT puuid, game_name, tag_line FROM players
+`);
 
 export const savePlayer = (player: any) => {
     insertPlayer.run({
