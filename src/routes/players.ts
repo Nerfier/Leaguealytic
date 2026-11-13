@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getAllPlayers } from "../db/players.ts";
 import { getSummary, getChampionStats, getRecentMatches } from "../db/stats.ts"
+import { getComboStats } from "../db/combos.ts";
 
 const router = Router();
 
@@ -25,6 +26,10 @@ router.get("/:puuid/matches", (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 20, 100);
     const offset = Math.max(Number(req.query.offset) || 0, 0);
     res.json(getRecentMatches(req.params.puuid, limit, offset));
+});
+
+router.get("/:puuid/combos/:champion", (req, res) => {
+    res.json(getComboStats({ champion: req.params.champion, puuid: req.params.puuid, queueId: 420}));
 });
 
 export default router;

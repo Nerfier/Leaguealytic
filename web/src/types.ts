@@ -34,3 +34,11 @@ export interface MatchRow {
   damage: number;
   vision_score: number;
 }
+
+export interface ComboRow {
+    role: "ADC" | "Support";
+    partner: string;
+    combo_type: string;
+    games?: number;
+    win_rate?: number;
+}

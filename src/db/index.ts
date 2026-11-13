@@ -39,9 +39,17 @@ CREATE TABLE IF NOT EXISTS match_participants (
   PRIMARY KEY (match_id, puuid)
 );
 
+CREATE TABLE IF NOT EXISTS bot_combos (
+  adc TEXT NOT NULL,
+  support TEXT NOT NULL,
+  combo_type TEXT NOT NULL,
+  PRIMARY KEY (adc, support)
+);
+
 CREATE INDEX IF NOT EXISTS idx_participants_puuid ON match_participants(puuid);
 CREATE INDEX IF NOT EXISTS idx_participants_champion ON match_participants(champion_id);
 CREATE INDEX IF NOT EXISTS idx_matches_start ON matches(game_start);
+CREATE INDEX IF NOT EXISTS idx_matches_queue ON matches(queue_id);
 `);
 
 export default db;
