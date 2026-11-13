@@ -2,6 +2,7 @@ import express from "express";
 import { startJobs } from "./jobs/scheduler.ts"
 import playersRouter from "./routes/players.ts"
 import combosRouter from "./routes/combos.ts";
+import { syncMeta } from "./services/metaSync.ts";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
