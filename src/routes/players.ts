@@ -9,6 +9,12 @@ router.get("/", (req, res) => {
     res.json(getAllPlayers());
 });
 
+router.get("/lookup/:name/:tag", (req, res) => {
+    const player = findPlayer({ name: req.params.name, tag: req.params.tag});
+    if (!player) { res.status(404).json({ error: "Player not tracked "}); return; }
+    res.json(player);
+});
+
 router.get("/:puuid/summary", (req, res) => {
     const summary = getSummary(req.params.puuid);
     if (!summary) {
@@ -32,10 +38,5 @@ router.get("/:puuid/combos/:champion", (req, res) => {
     res.json(getComboStats({ champion: req.params.champion, puuid: req.params.puuid, queueId: 420}));
 });
 
-router.get("/lookup/:name/:tag", (req, res) => {
-    const player = findPlayer({ name: req.params.name, tag: req.params.tag});
-    if (!player) { res.status(404).json({ error: "Player not tracked "}); return; }
-    res.json(player);
-});
 
 export default router;

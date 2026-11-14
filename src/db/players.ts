@@ -47,7 +47,7 @@ const selectPlayer = db.prepare(
 
 export const findPlayer = (args: { name: string, tag: string}) => {
     const row = selectPlayer.get(args) as
-        | { puuid: number; game_name: string, tag_line: string }
+        | { puuid: number; game_name: string, tag_line: string, last_synced: number }
         | undefined;
     return row ?? null;
 }

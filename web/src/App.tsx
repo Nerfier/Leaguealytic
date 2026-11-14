@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router";
-import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage";
-import PlayerPage from "./pages/PlayerPage";
-import MatchHistoryPage from "./pages/MatchHistoryPage";
-import CombosPage from "./pages/CombosPage";
+import Layout from "./components/Layout.tsx";
+import HomePage from "./pages/HomePage.tsx";
+import PlayerPage from "./pages/PlayerPage.tsx";
+import MatchHistoryPage from "./pages/MatchHistoryPage.tsx";
+import CombosPage from "./pages/CombosPage.tsx";
 
 export default function App() {
   return (
