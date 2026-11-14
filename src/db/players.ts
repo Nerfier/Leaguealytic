@@ -5,22 +5,6 @@ const insertPlayer = db.prepare(`
     VALUES (@puuid, @game_name, @tag_line)
 `);
 
-const updateLastSynced = db.prepare(`
-    UPDATE players SET last_synced = @last_synced WHERE puuid = @puuid
-`);
-
-const selectLastSynced = db.prepare(
-    `SELECT last_synced FROM players WHERE puuid = ?`
-);
-
-const updatePlayer = db.prepare(`
-    UPDATE players SET game_name = @game_name, tag_line = @tag_line WHERE puuid = @puuid
-`);
-
-const selectAllPlayers = db.prepare(`
-    SELECT puuid, game_name, tag_line FROM players
-`);
-
 export const savePlayer = (player: any) => {
     insertPlayer.run({
         puuid: player.puuid,
@@ -28,13 +12,21 @@ export const savePlayer = (player: any) => {
         tag_line: player.tagLine
     });
 };    
-        
+    
+const updateLastSynced = db.prepare(`
+    UPDATE players SET last_synced = @last_synced WHERE puuid = @puuid
+`);
+
 export const touchPlayer = (puuid: string, lastSynced: number) => {
     updateLastSynced.run({
         puuid: puuid,
         last_synced: lastSynced
     })
 };
+
+const selectLastSynced = db.prepare(
+    `SELECT last_synced FROM players WHERE puuid = ?`
+);
 
 export const getLastSynced = (puuid: string): number | null => {
     const row = selectLastSynced.get(puuid) as
@@ -43,4 +35,19 @@ export const getLastSynced = (puuid: string): number | null => {
     return row?.last_synced ?? null;
 };
 
+const selectAllPlayers = db.prepare(`
+    SELECT puuid, game_name, tag_line FROM players
+`);
+
 export const getAllPlayers = () => selectAllPlayers.all() as { puuid: string, game_name: string, tag_line: string}[];
+
+const selectPlayer = db.prepare(
+    `SELECT * FROM players WHERE game_name = @name COLLATE NOCASE AND tag_line = @tag COLLATE NOCASE`
+);
+
+export const findPlayer = (args: { name: string, tag: string}) => {
+    const row = selectPlayer.get(args) as
+        | { puuid: number; game_name: string, tag_line: string }
+        | undefined;
+    return row ?? null;
+}

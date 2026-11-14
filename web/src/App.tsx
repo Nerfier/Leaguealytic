@@ -1,21 +1,20 @@
-import { useState } from "react";
-import PlayerList from "./components/PlayerList.tsx";
-import Summary from "./components/Summary.tsx";
-import ChampionTable from "./components/ChampionTable.tsx";
-import MatchList from "./components/MatchList.tsx";
-import ComboLookup from "./components/ComboLookup.tsx";
+import { Routes, Route } from "react-router";
+import Layout from "./components/Layout";
+import HomePage from "./pages/HomePage";
+import PlayerPage from "./pages/PlayerPage";
+import MatchHistoryPage from "./pages/MatchHistoryPage";
+import CombosPage from "./pages/CombosPage";
 
 export default function App() {
-    const [selectedPuuid, setSelectedPuuid] = useState<string | null>(null);
-
-    return (
-        <div>
-            <h1>League Stats</h1>
-            <PlayerList selectedPuuid={selectedPuuid} onSelect={setSelectedPuuid} />
-            {/* {selectedPuuid && <Summary puuid={selectedPuuid} />}
-            {selectedPuuid && <ChampionTable puuid={selectedPuuid} />}
-            {selectedPuuid && <MatchList puuid={selectedPuuid} />} */}
-            {selectedPuuid && <ComboLookup puuid={selectedPuuid} />}
-        </div>
-    );
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/player/:name/:tag" element={<PlayerPage />} />
+        <Route path="/player/:name/:tag/matches" element={<MatchHistoryPage />} />
+        <Route path="/combos" element={<CombosPage />} />
+        <Route path="*" element={<p>Page not found</p>} />
+      </Route>
+    </Routes>
+  );
 }

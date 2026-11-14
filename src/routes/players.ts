@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllPlayers } from "../db/players.ts";
+import { findPlayer, getAllPlayers } from "../db/players.ts";
 import { getSummary, getChampionStats, getRecentMatches } from "../db/stats.ts"
 import { getComboStats } from "../db/combos.ts";
 
@@ -30,6 +30,12 @@ router.get("/:puuid/matches", (req, res) => {
 
 router.get("/:puuid/combos/:champion", (req, res) => {
     res.json(getComboStats({ champion: req.params.champion, puuid: req.params.puuid, queueId: 420}));
+});
+
+router.get("/lookup/:name/:tag", (req, res) => {
+    const player = findPlayer({ name: req.params.name, tag: req.params.tag});
+    if (!player) { res.status(404).json({ error: "Player not tracked "}); return; }
+    res.json(player);
 });
 
 export default router;
