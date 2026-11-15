@@ -1,9 +1,10 @@
+import SearchBox from "../components/SearchBox";
 
 
 export default function HomePage() {
     return (
         <>
-            <p>Hello!</p>
+            <SearchBox />
         </>
     );
 }

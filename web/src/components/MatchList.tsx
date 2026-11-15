@@ -2,7 +2,6 @@ import useFetch from "../hooks/useFetch.ts";
 import type { MatchRow } from "../types.ts";
 import { useState } from "react";
 
-const PAGE_SIZE = 20;
 
 const QUEUES: Record<number, string> = {
     420: "Ranked Solo",
@@ -18,10 +17,10 @@ const getQueueName = (id: number): string => {
 }
 
 
-export default function MatchList({ puuid }: { puuid: string }) {
+export default function MatchList({ puuid, pageSize = 20 }: { puuid: string, pageSize: number }) {
     const [page, setPage] = useState(0);
     const { data, loading, showLoading, error } = useFetch<MatchRow[]>(
-        `/api/players/${puuid}/matches?limit=${PAGE_SIZE}&offset=${page * PAGE_SIZE}`
+        `/api/players/${puuid}/matches?limit=${pageSize}&offset=${page * pageSize}`
     );
 
     if (!data && loading) return showLoading ? <p>Loading...</p> : null;
@@ -62,7 +61,7 @@ export default function MatchList({ puuid }: { puuid: string }) {
             <span> Page {page + 1} </span>
             <button
                 onClick={() => setPage((p) => p + 1)}
-                disabled={data.length < PAGE_SIZE}
+                disabled={data.length < pageSize}
             >
                 Next
             </button>
