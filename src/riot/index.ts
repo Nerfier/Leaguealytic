@@ -2,12 +2,12 @@ import "dotenv/config";
 const key: string = String(process.env.RIOT_API_KEY);
 
 const REGION = "europe";
-const BASE_URL = `https://${REGION}.api.riotgames.com`;
+const BASE_URL = (region: string) => `https://${region}.api.riotgames.com`;
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms)); 
 
-const riotFetch = async <T> (path: string, retries = 3): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, {
+const riotFetch = async <T> (path: string, retries = 3, region = REGION): Promise<T> => {
+    const res = await fetch(`${BASE_URL(region)}${path}`, {
         headers: {"X-Riot-Token": key}
     });
     if (res.status === 429 && retries > 0) {
@@ -55,4 +55,10 @@ export async function getMatchIds(
 
 export async function getMatch(match_id: string): Promise<any> {
     return await riotFetch(`/lol/match/v5/matches/${match_id}`);
+}
+
+export async function getLeague(puuid: string, league_region = "euw1"): Promise<string[]> {
+    return await riotFetch<string[]>(
+        `/lol/league/v4/entries/by-puuid/${puuid}`
+    , 3 , league_region);
 }

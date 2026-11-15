@@ -12,6 +12,18 @@ CREATE TABLE IF NOT EXISTS players (
   last_synced INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS league (
+  puuid TEXT NOT NULL REFERENCES players(puuid),
+  queue_type TEXT NOT NULL,
+  tier TEXT NOT NULL,
+  rank TEXT NOT NULL,
+  league_points INTEGER NOT NULL,
+  wins INTEGER NOT NULL,
+  losses INTEGER NOT NULL,
+  raw_json TEXT NOT NULL,
+  PRIMARY KEY (queue_type, puuid)
+);
+
 CREATE TABLE IF NOT EXISTS matches (
   match_id TEXT PRIMARY KEY,
   game_start INTEGER NOT NULL,
