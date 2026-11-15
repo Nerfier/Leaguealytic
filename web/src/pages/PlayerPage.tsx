@@ -1,9 +1,10 @@
 import { useParams } from "react-router";
-import useFetch from "../hooks/useFetch";
-import type { Player } from "../types";
-import Summary from "../components/Summary";
-import ChampionTable from "../components/ChampionTable";
-import MatchList from "../components/MatchList";
+import useFetch from "../hooks/useFetch.ts";
+import type { Player } from "../types.ts";
+import Summary from "../components/Summary.tsx";
+import ChampionTable from "../components/ChampionTable.tsx";
+import MatchList from "../components/MatchList.tsx";
+import SearchBox from "../components/SearchBox.tsx";
 
 
 export default function PlayerPage() {
@@ -18,9 +19,10 @@ export default function PlayerPage() {
 
     return (
         <>
-            <Summary puuid={player.puuid}></Summary>
-            <MatchList puuid={player.puuid} pageSize={5} ></MatchList>
-            <ChampionTable puuid={player.puuid}></ChampionTable>
+            <h2>{player.game_name}</h2>
+            <Summary puuid={player.puuid} />
+            <MatchList puuid={player.puuid} pageSize={5} />
+            <ChampionTable puuid={player.puuid} />
         </>
     );
 }
