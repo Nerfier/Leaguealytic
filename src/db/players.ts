@@ -47,7 +47,19 @@ const selectPlayer = db.prepare(
 
 export const findPlayer = (args: { name: string, tag: string}) => {
     const row = selectPlayer.get(args) as
-        | { puuid: string; game_name: string, tag_line: string, last_synced: number }
+        | { puuid: string, game_name: string, tag_line: string, last_synced: number }
         | undefined;
     return row ?? null;
 }
+
+const selectPlayersLike = db.prepare(`
+    SELECT game_name, tag_line
+    FROM players
+    WHERE lower(game_name) LIKE lower(@text) || '%' 
+    ORDER BY game_name, tag_line 
+    LIMIT 8
+`);
+
+export const getPlayersLike = (text: string) => 
+    selectPlayersLike.all({ text: text}) as 
+        | { game_name: string, tag_line: string}[];

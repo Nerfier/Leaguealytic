@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findPlayer, getAllPlayers } from "../db/players.ts";
+import { findPlayer, getAllPlayers, getPlayersLike } from "../db/players.ts";
 import { getSummary, getChampionStats, getRecentMatches } from "../db/stats.ts"
 import { getComboStats } from "../db/combos.ts";
 
@@ -7,6 +7,15 @@ const router = Router();
 
 router.get("/", (req, res) => {
     res.json(getAllPlayers());
+});
+
+router.get("/suggest", (req, res) => {
+    const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    if (q.length < 2) { res.json([]); return; }
+
+    const playerSuggestions = getPlayersLike(q);
+    if (!playerSuggestions || playerSuggestions.length === 0) { res.status(404).json({ error: "No matching players"}); return; }
+    res.json(playerSuggestions);
 });
 
 router.get("/lookup/:name/:tag", (req, res) => {
