@@ -47,7 +47,6 @@ export const saveMatch = db.transaction((match: any) => {
             vision_score: participant.visionScore
         });
     });
-    console.log(`Successfully saved match ${match_id}`);
 });
 
 // Check if a match exists in the database

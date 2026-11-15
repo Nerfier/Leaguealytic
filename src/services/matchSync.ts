@@ -4,7 +4,7 @@ import { matchExists, saveMatch} from "../db/matches.ts"
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-export const syncPlayer = async (puuid: string) => {
+export const syncMatches = async (puuid: string) => {
     const fullyBackfilled = getLastSynced(puuid) !== null;
     let saved = 0;
     let start = 0;

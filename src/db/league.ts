@@ -5,7 +5,6 @@ const insertLeague = db.prepare(`
     VALUES (@puuid, @queue_type, @tier, @rank, @league_points, @wins, @losses, @raw_json)
 `);
 
-
 export const saveLeague = db.transaction((leagues: any[]) => {
     leagues.forEach(league => {
         insertLeague.run({

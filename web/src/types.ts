@@ -5,10 +5,26 @@ export interface Player {
 }
 
 export interface Summary {
+    matchSummary: matchSummary;
+    soloSummary: leagueSummary;
+    flexSummary: leagueSummary;
+}
+
+interface matchSummary {
     games: number;
     wins: number | null;
     win_rate: number | null;
     kda: number | null;
+}
+
+interface leagueSummary {
+    queue: string;
+    tier: string;
+    rank: string;
+    lp: number;
+    wins: number;
+    losses: number;
+    win_rate: number | null;
 }
 
 export interface Champion {
@@ -19,20 +35,20 @@ export interface Champion {
 }
 
 export interface MatchRow {
-  match_id: string;
-  game_start: number;
-  duration: number;
-  queue_id: number;
-  champion_id: string;
-  champion_name: string
-  position: string | null;
-  win: number;
-  kills: number;
-  deaths: number;
-  assists: number;
-  cs: number;
-  damage: number;
-  vision_score: number;
+    match_id: string;
+    game_start: number;
+    duration: number;
+    queue_id: number;
+    champion_id: string;
+    champion_name: string
+    position: string | null;
+    win: number;
+    kills: number;
+    deaths: number;
+    assists: number;
+    cs: number;
+    damage: number;
+    vision_score: number;
 }
 
 export interface ComboRow {
