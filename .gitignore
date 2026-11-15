@@ -6,7 +6,6 @@ node_modules/
 
 
 *.db
-data/*
 data/stats.db
 data/
 
