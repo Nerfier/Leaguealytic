@@ -55,11 +55,13 @@ export const findPlayer = (args: { name: string, tag: string}) => {
 const selectPlayersLike = db.prepare(`
     SELECT game_name, tag_line
     FROM players
-    WHERE lower(game_name) LIKE lower(@text) || '%' 
-    ORDER BY game_name, tag_line 
+    WHERE game_name COLLATE NOCASE LIKE ? ESCAPE '\\'
+    ORDER BY game_name COLLATE NOCASE, tag_line
     LIMIT 8
 `);
 
-export const getPlayersLike = (text: string) => 
-    selectPlayersLike.all({ text: text}) as 
+export const getPlayersLike = (text: string) => {
+    text = text.replace(/[%_]/g, "");
+    return selectPlayersLike.all(`${text}%`) as
         | { game_name: string, tag_line: string}[];
+};

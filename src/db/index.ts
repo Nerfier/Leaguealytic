@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS champion_meta (
 );
 
 
-CREATE INDEX IF NOT EXISTS idx_players_name ON players(lower(game_name) text_pattern_ops);
+CREATE INDEX IF NOT EXISTS idx_players_game_name_nocase ON players(game_name COLLATE nocase);
 
 CREATE INDEX IF NOT EXISTS idx_participants_puuid ON match_participants(puuid);
 CREATE INDEX IF NOT EXISTS idx_participants_champion ON match_participants(champion_id);
