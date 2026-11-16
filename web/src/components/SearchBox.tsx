@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import { useNavigate } from "react-router";
 import type { Player } from "../types";
 import useFetch from "../hooks/useFetch";
 
 const MIN_LENGTH = 1;
-
-interface PlayerSearchProps {
-    onSelect?: (player: Player) => void;
-}
 
 export default function SearchBox() {
     const [inputText, setInputText] = useState<string>("");
@@ -20,7 +16,7 @@ export default function SearchBox() {
     const namePart = inputText.includes("#") ? "" : inputText;
 
     useEffect(() => {
-        const t = setTimeout(() => setDebouncedQuery(namePart.trim()), 250);
+        const t = setTimeout(() => setDebouncedQuery(namePart.trim()), 0);
         return () => clearTimeout(t);
     }, [namePart]);
 
@@ -42,7 +38,7 @@ export default function SearchBox() {
         setActiveIndex(-1);
         
         navigate(
-            `player/${encodeURIComponent(name)}${encodeURIComponent(tag)}`
+            `player/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`
         );
     }
 
@@ -65,9 +61,30 @@ export default function SearchBox() {
         else searchPlayer(name, tag);
     }
 
-    const handleKeyDown = () => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!showList) return;
 
-    }
+        switch (e.key) {
+            case "ArrowDown":
+                e.preventDefault();
+                setActiveIndex(i => (i + 1) % suggestions.length);
+                break;
+            case "ArrowUp":
+                e.preventDefault();
+                setActiveIndex(i => (i <= 0 ? suggestions.length - 1 : i - 1));
+                break;
+            case "Enter":
+                if (activeIndex >= 0) {
+                    e.preventDefault();
+                    const s: Player = suggestions[activeIndex];
+                    searchPlayer(s.game_name, s.tag_line);
+                }
+                break;
+            case "Escape":
+                setOpen(false);
+                break;
+        }
+    };
 
     return (
         <form onSubmit={handleSubmit} noValidate>
@@ -93,7 +110,7 @@ export default function SearchBox() {
                     aria-activedescendant={
                         activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
                     }
-                    aria-invalid={error!!}
+                    aria-invalid={!!error}
                     aria-describedby={error ? "riot-id-error" : undefined}
                 />
 
@@ -116,13 +133,35 @@ export default function SearchBox() {
                                     e.preventDefault();
                                     searchPlayer(s.game_name, s.tag_line);
                                 }}
-                            >
+                                onMouseEnter={() => setActiveIndex(i)}
+                                style={{
+                                    background: i === 
+                                        activeIndex ? "#eef3ff" : "transparent",
+                                    cursor: "default",
+                                }}
+                                
 
+                            >
+                                {s.game_name}#{s.tag_line}
                             </li>
                         ))}
                     </ul>
                 )}
             </div>
+
+            <button type="submit">Search</button>
+            {error && (
+                <p 
+                    id="riot-id-error" 
+                    role="alert"
+                    style={{
+                        color: "crimson",
+                        fontSize: "0.875rem"
+                    }}
+                >
+                    {error}
+                </p>
+            )}
         </form>
     );
 }
