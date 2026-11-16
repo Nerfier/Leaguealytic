@@ -1,11 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import type { Player } from "../types";
+import useFetch from "../hooks/useFetch";
 
+const MIN_LENGTH = 1;
+
+interface PlayerSearchProps {
+    onSelect?: (player: Player) => void;
+}
 
 export default function SearchBox() {
     const [inputText, setInputText] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+    const [debouncedQuery, setDebouncedQuery] = useState<string>("");
+    const [open, setOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(-1);
     const navigate = useNavigate();
+
+    const namePart = inputText.includes("#") ? "" : inputText;
+
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedQuery(namePart.trim()), 250);
+        return () => clearTimeout(t);
+    }, [namePart]);
+
+    const { data } = useFetch<Player[]>(
+        debouncedQuery.length >= MIN_LENGTH
+            ? `api/players/suggest?q=${encodeURIComponent(debouncedQuery)}`
+            : null
+    );
+
+    const suggestions = namePart.trim().length >= MIN_LENGTH ? (data ?? []) : [];
+    const showList = open && suggestions.length > 0;
+
+
+
+    const searchPlayer = (name: string, tag: string) => {
+        setError(null);
+        setInputText("");
+        setOpen(false);
+        setActiveIndex(-1);
+        
+        navigate(
+            `player/${encodeURIComponent(name)}${encodeURIComponent(tag)}`
+        );
+    }
 
     const handleSubmit = (e: React.SubmitEvent) => {
         e.preventDefault();
@@ -20,37 +59,70 @@ export default function SearchBox() {
         }
 
         const name = trimmed.slice(0, idx).trim();
-        const tag = trimmed.slice(idx + 1).trim();
+        const tag = trimmed.slice(idx + 1);
 
-        if (!name || !tag) setError("Missing name or tag")
-        else {
-            // Clear errors and input field
-            setError(null);
-            setInputText("");
-            navigate(`/player/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
-        }
-    };
+        if (!name || !tag) setError("Missing name or tag");
+        else searchPlayer(name, tag);
+    }
+
+    const handleKeyDown = () => {
+
+    }
 
     return (
         <form onSubmit={handleSubmit} noValidate>
-            <input
-                type="text"
-                value={inputText}
-                onChange={e => {
-                    setInputText(e.target.value);
-                    if (error) setError(null);
-                }}
-                placeholder="Name#Tag"
-                aria-invalid={!!error}
-                aria-describedby={error ? "riot-id-error" : undefined}
-            />
-            <button type="submit">Search</button>
-            {error && (
-                <p id="riot-id-error" role="alert" style={{ color: "crimson", fontSize: "0.875rem" }}>
-                    {error}
-                 </p>
-            )}
+            <div style={{ position: "relative", display: "inline-block"}}>
+                <input
+                    type="text"
+                    value={inputText}
+                    onChange={e => {
+                        setInputText(e.target.value);
+                        setOpen(true);
+                        setActiveIndex(-1);
+                        if (error) setError(null);
+                    }}
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setOpen(true)}
+                    onBlur={() => setOpen(false)}
+                    placeholder="Name#Tag"
+                    autoComplete="off"
+                    role="combobox"
+                    aria-expanded={showList}
+                    aria-controls="player-suggestions"
+                    aria-autocomplete="list"
+                    aria-activedescendant={
+                        activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined
+                    }
+                    aria-invalid={error!!}
+                    aria-describedby={error ? "riot-id-error" : undefined}
+                />
+
+                {showList && (
+                    <ul
+                        id="player-suggestions"
+                        role="listbox"
+                        style={{ 
+                            position: "absolute"
+                        }}
+                    >
+                        {suggestions.map((s, i) => (
+                            <li
+                                key={`${s.game_name}#${s.tag_line}`}
+                                id={`suggestion-${i}`}
+                                role="option"
+                                aria-selected={i === activeIndex}
+                                // OnMouseDown fires before onBlur
+                                onMouseDown={e => {
+                                    e.preventDefault();
+                                    searchPlayer(s.game_name, s.tag_line);
+                                }}
+                            >
+
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </form>
     );
 }
-
