@@ -6,13 +6,15 @@ interface Result<T> {
   error: string | null;
 }
 
-export default function useFetch<T>(url: string, delayMs = 200) {
+export default function useFetch<T>(url: string | null, delayMs = 200) {
   const [result, setResult] = useState<Result<T> | null>(null);
   const [showLoading, setShowLoading] = useState(false);
 
   // Fetch
   useEffect(() => {
     let cancelled = false;
+
+    if (url === null) return;
 
     fetch(url)
       .then((res) => {
@@ -32,7 +34,7 @@ export default function useFetch<T>(url: string, delayMs = 200) {
     };
   }, [url]);
 
-  const loading = result === null || result.url !== url;
+  const loading = url !== null && (result === null || result.url !== url);
 
   // Delayed loading flag
   useEffect(() => {
