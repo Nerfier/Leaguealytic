@@ -10,14 +10,14 @@ export interface Summary {
     flexSummary: leagueSummary;
 }
 
-interface matchSummary {
+export interface matchSummary {
     games: number;
     wins: number | null;
     win_rate: number | null;
     kda: number | null;
 }
 
-interface leagueSummary {
+export interface leagueSummary {
     queue: string;
     tier: string;
     rank: string;

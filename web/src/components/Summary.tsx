@@ -13,14 +13,15 @@ export default function Summary({ puuid }: { puuid: string }) {
     return (
         <div style={{ opacity: showLoading ? 0.5 : 1}}>
             {matchHTML(data.matchSummary)}
-            {LeagueHTML(data.soloSummary)}
-            {LeagueHTML(data.flexSummary)}
+            {LeagueHTML(data.soloSummary, "Ranked Solo/Duo")}
+            {LeagueHTML(data.flexSummary, "Ranked Flex")}
         </div>
     );
 }
 
 
 const matchHTML = (data: SummaryData["matchSummary"]) => {
+    if (!data) return <p>No stats available</p>
     return (
         <div>
             <b>All queues</b>
@@ -31,7 +32,8 @@ const matchHTML = (data: SummaryData["matchSummary"]) => {
     );
 }
 
-const LeagueHTML = (data: SummaryData["soloSummary"] | SummaryData["flexSummary"]) => {
+const LeagueHTML = (data: SummaryData["soloSummary"] | SummaryData["flexSummary"], queue: string) => {
+    if (!data) return <p>No {queue} stats available</p>
     return (
         <div>
             <b>{cleanupQueue(data.queue)}</b>
