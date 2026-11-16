@@ -15,6 +15,7 @@ router.get("/suggest", (req, res) => {
 
     const playerSuggestions = getPlayersLike(q);
     if (!playerSuggestions || playerSuggestions.length === 0) { res.status(404).json({ error: "No matching players"}); return; }
+    res.set("Cache-Control", "no-store");
     res.json(playerSuggestions);
 });
 

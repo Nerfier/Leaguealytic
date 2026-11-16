@@ -47,6 +47,7 @@ export default function useFetch<T>(url: string | null, delayMs = 200) {
   }, [loading, delayMs]);
 
   return {
+    dataUrl: result?.url ?? null,
     data: result?.data ?? null,   // keeps the previous data while loading
     error: loading ? null : result?.error ?? null,
     loading,                      // true during any fetch (use for dimming)

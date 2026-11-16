@@ -1,9 +1,9 @@
-import React, { useState, useEffect, act } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import type { Player } from "../types";
-import useFetch from "../hooks/useFetch";
+import type { Player } from "../types.ts";
+import useFetch from "../hooks/useFetch.ts";
 
-const MIN_LENGTH = 1;
+const MIN_LENGTH = 2;
 
 export default function SearchBox() {
     const [inputText, setInputText] = useState<string>("");
@@ -16,20 +16,35 @@ export default function SearchBox() {
     const namePart = inputText.includes("#") ? "" : inputText;
 
     useEffect(() => {
-        const t = setTimeout(() => setDebouncedQuery(namePart.trim()), 0);
+        const t = setTimeout(() => setDebouncedQuery(namePart.trim()), 50);
         return () => clearTimeout(t);
     }, [namePart]);
 
-    const { data } = useFetch<Player[]>(
-        debouncedQuery.length >= MIN_LENGTH
-            ? `api/players/suggest?q=${encodeURIComponent(debouncedQuery)}`
-            : null
-    );
+    const url = debouncedQuery.length >= MIN_LENGTH
+        ? `/api/players/suggest?q=${encodeURIComponent(debouncedQuery)}`
+        : null;
 
-    const suggestions = namePart.trim().length >= MIN_LENGTH ? (data ?? []) : [];
+    const { data , dataUrl } = useFetch<Player[]>(url);
+   
+    useEffect(() => {
+        console.log("SearchBox mounted");
+        return () => console.log("SearchBox unmounted");
+    }, []);
+    
+    const dataQuery = dataUrl
+        ? new URL(dataUrl, window.location.origin).searchParams.get("q") ?? ""
+        : "";
+
+    const live = namePart.trim().toLowerCase();
+    const related =
+        live.startsWith(dataQuery.toLocaleLowerCase()) ||
+        dataQuery.toLocaleLowerCase().startsWith(live);
+    const suggestions = live.length >= MIN_LENGTH && related
+        ? (data ?? []).filter(p => p.game_name.toLowerCase().startsWith(live))
+        : [];
     const showList = open && suggestions.length > 0;
 
-
+    console.log({ open, data, count: suggestions.length });  // in the component body
 
     const searchPlayer = (name: string, tag: string) => {
         setError(null);
@@ -76,7 +91,8 @@ export default function SearchBox() {
             case "Enter":
                 if (activeIndex >= 0) {
                     e.preventDefault();
-                    const s: Player = suggestions[activeIndex];
+                    const s: Player | undefined = suggestions[activeIndex];
+                    if (!s) break;
                     searchPlayer(s.game_name, s.tag_line);
                 }
                 break;
@@ -100,7 +116,10 @@ export default function SearchBox() {
                     }}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setOpen(true)}
-                    onBlur={() => setOpen(false)}
+                    onBlur={() => {
+                        setOpen(false);
+                        console.log("onblur")
+                    }}
                     placeholder="Name#Tag"
                     autoComplete="off"
                     role="combobox"
