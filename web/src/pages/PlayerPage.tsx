@@ -1,17 +1,13 @@
 import { useParams } from "react-router";
-import useFetch from "../hooks/useFetch.ts";
-import type { Player } from "../types.ts";
 import Summary from "../components/Summary.tsx";
 import ChampionTable from "../components/ChampionTable.tsx";
 import MatchList from "../components/MatchList.tsx";
-import SearchBox from "../components/SearchBox.tsx";
+import { usePlayer } from "../hooks/usePlayer.ts";
 
 
 export default function PlayerPage() {
     const { name, tag } = useParams();
-    const { data: player, loading, showLoading, error } = useFetch<Player>(
-        `/api/players/lookup/${encodeURIComponent(name ?? "")}/${encodeURIComponent(tag ?? "")}`
-    );
+    const { data: player, loading, showLoading, error } = usePlayer(name, tag);
 
     if (!player && loading) return showLoading ? (<p>Loading...</p>) : null;
     if (error) return <p>Error: {error}</p>;
