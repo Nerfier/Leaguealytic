@@ -53,16 +53,3 @@ const selectChampions = db.prepare(`
 `);
 
 export const getChampionStats = (puuid: string) => selectChampions.all(puuid);
-
-const selectMatches = db.prepare(`
-  SELECT m.match_id, m.game_start, m.duration, m.queue_id,
-         p.champion_name, p.position, p.win, p.kills, p.deaths, p.assists, p.cs
-  FROM match_participants p
-  JOIN matches m ON m.match_id = p.match_id
-  WHERE p.puuid = ?
-  ORDER BY m.game_start DESC
-  LIMIT ? OFFSET ?
-`);
-
-export const getRecentMatches = (puuid: string, limit: number = 20, offset: number = 0) =>
-  selectMatches.all(puuid, limit, offset);

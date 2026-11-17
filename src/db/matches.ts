@@ -54,3 +54,25 @@ export const matchExists = (matchId : string) => {
     const row = db.prepare("SELECT 1 FROM matches WHERE match_id = ?").get(matchId);
     return !!row;
 }
+
+const selectMatches = db.prepare(`
+  SELECT m.match_id, m.game_start, m.duration, m.queue_id,
+         p.champion_name, p.position, p.win, p.kills, p.deaths, p.assists, p.cs
+  FROM match_participants p
+  JOIN matches m ON m.match_id = p.match_id
+  WHERE p.puuid = @puuid AND (@queue_id IS NULL OR m.queue_id = @queue_id)
+  ORDER BY m.game_start DESC
+  LIMIT @limit OFFSET @offset
+`);
+
+export const getRecentMatches = (
+    puuid: string, 
+    limit: number = 20, 
+    offset: number = 0,
+    queue_id: number | null = null) =>
+        selectMatches.all({
+            puuid: puuid,
+            limit: limit,
+            offset: offset,
+            queue_id: queue_id
+        });

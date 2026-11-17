@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { findPlayer, getAllPlayers, getPlayersLike } from "../db/players.ts";
-import { getSummary, getChampionStats, getRecentMatches } from "../db/stats.ts"
+import { getSummary, getChampionStats } from "../db/stats.ts"
 import { getComboStats } from "../db/combos.ts";
+import { getRecentMatches } from "../db/matches.ts";
 
 const router = Router();
 
