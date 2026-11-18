@@ -42,7 +42,9 @@ router.get("/:puuid/champions", (req, res) => {
 router.get("/:puuid/matches", (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 20, 100);
     const offset = Math.max(Number(req.query.offset) || 0, 0);
-    res.json(getRecentMatches(req.params.puuid, limit, offset));
+    const queue_min = Number(req.query.queueMin) || null;
+    const queue_max = Number(req.query.queueMax) || null;
+    res.json(getRecentMatches(req.params.puuid, limit, offset, queue_min, queue_max));
 });
 
 router.get("/:puuid/combos/:champion", (req, res) => {
