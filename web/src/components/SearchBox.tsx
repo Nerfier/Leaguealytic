@@ -25,11 +25,6 @@ export default function SearchBox() {
         : null;
 
     const { data , dataUrl } = useFetch<Player[]>(url);
-   
-    useEffect(() => {
-        console.log("SearchBox mounted");
-        return () => console.log("SearchBox unmounted");
-    }, []);
     
     const dataQuery = dataUrl
         ? new URL(dataUrl, window.location.origin).searchParams.get("q") ?? ""
@@ -43,8 +38,6 @@ export default function SearchBox() {
         ? (data ?? []).filter(p => p.game_name.toLowerCase().startsWith(live))
         : [];
     const showList = open && suggestions.length > 0;
-
-    console.log({ open, data, count: suggestions.length });  // in the component body
 
     const searchPlayer = (name: string, tag: string) => {
         setError(null);
@@ -118,7 +111,6 @@ export default function SearchBox() {
                     onFocus={() => setOpen(true)}
                     onBlur={() => {
                         setOpen(false);
-                        console.log("onblur")
                     }}
                     placeholder="Name#Tag"
                     autoComplete="off"

@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import Summary from "../components/Summary.tsx";
 import ChampionTable from "../components/ChampionTable.tsx";
 import MatchList from "../components/MatchList.tsx";
-import { usePlayer } from "../hooks/usePlayer.ts";
+import usePlayer from "../hooks/usePlayer.ts";
 
 
 export default function PlayerPage() {
