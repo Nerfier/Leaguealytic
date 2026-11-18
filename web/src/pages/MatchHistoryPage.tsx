@@ -1,7 +1,8 @@
 import {useParams, useSearchParams} from "react-router";
 import usePlayer from "../hooks/usePlayer.ts";
 import useFetch from "../hooks/useFetch.ts";
-import {getQueueLabel, getQueueRange, type MatchRow, QUEUES} from "../types.ts";
+import type { MatchRow } from "../types.ts";
+import { getQueueLabel, getQueueRange, QUEUES } from "../lib/queues.ts";
 
 const PAGE_SIZE = 20;
 

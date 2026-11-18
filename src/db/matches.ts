@@ -1,4 +1,5 @@
 import db from "./index.ts";
+import { QUEUES } from "./queues.ts";
 
 // Insert or replace match data
 const insertMatch = db.prepare(`
@@ -69,12 +70,11 @@ export const getRecentMatches = (
     puuid: string, 
     limit: number = 20, 
     offset: number = 0,
-    queueMin: number | null = null,
-    queueMax: number | null = null) =>
+    queue: string | null = null) =>
         selectMatches.all({
             puuid: puuid,
             limit: limit,
             offset: offset,
-            queue_min: queueMin,
-            queue_max: queueMax,
+            queue_min: queue ? QUEUES[queue]?.[0] : null,
+            queue_max: queue ? QUEUES[queue]?.[0] : null,
         });
